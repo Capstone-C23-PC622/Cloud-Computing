@@ -1,19 +1,31 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema ({
+const userSchema = mongoose.Schema({
     username: {
-        type: String
+        type: String,
+        required: true
     },
     email: {
-        type: String
+        type: String,
+        required: true
     },
     password: {
-        type: String
+        type: String,
+        required: true,
+        min: 6
     },
     role: {
-        type: Number
+        type: Number,
+        required: true
     },
-})
+}, { timestamps: true });
+
+userSchema.methods.toJSON = function () {
+    const { __v, _id, ...object } = this.toObject();
+    object.id = _id;
+    return object;
+};
+
 
 // const biodataSchema = new mongoose.Schema ({
 //     nama: {

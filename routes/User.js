@@ -1,12 +1,14 @@
 const router = require('express').Router()
 const userController = require('../controller/userControllers');
 
+// registrasi 
 router.post('/registrasi', (req,res) => {
     userController.registrasi(req.body)
     .then((result) => res.json(result))
     .catch((err) => res.json(err))
 })
 
+// login
 router.post('/login', (req,res) => {
     userController.login(req.body)
     .then((result) => res.json(result))
