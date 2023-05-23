@@ -7,12 +7,12 @@ const userSchema = mongoose.Schema({
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     },
     password: {
         type: String,
         required: true,
-        min: 6
     },
     role: {
         type: Number,
@@ -21,56 +21,10 @@ const userSchema = mongoose.Schema({
 }, { timestamps: true });
 
 userSchema.methods.toJSON = function () {
-    const { __v, _id, ...object } = this.toObject();
-    object.id = _id;
+    const { __v, ...object } = this.toObject();
+    object._id = object._id.toString();
     return object;
 };
 
 
-// const biodataSchema = new mongoose.Schema ({
-//     nama: {
-//         type: String
-//     },
-//     birthday: {
-//         day: {
-//             type: Number
-//         },
-//         month: {
-//             type: Number
-//         },
-//         year: {
-//             type: Number
-//         }
-//     },
-//     alamat: {
-//         type: String,
-//         required: true,
-//     },
-//     deskripsiDiri: {
-//         type: String,
-//         required: true, 
-//     },
-//     pendidikan: {
-//         type: String,
-//         enum: ['SD', 'SMP', 'SMA/SMK', 'S1/D4'],
-//         requires: true,
-//     },
-//     pengalaman: {
-//         type: String
-//     },
-//     keterampilan: {
-//         type: String
-//     },
-//     peminatan: {
-//         type: String
-//     }
-// })
-
-
-module.exports = mongoose.model('users', userSchema)
-
-
-// const User = mongoose.model('users', userSchema);
-// const Biodata = mongoose.model('biodatas', biodataSchema);
-
-// module.exports = { User, Biodata };
+module.exports = mongoose.model('users', userSchema);

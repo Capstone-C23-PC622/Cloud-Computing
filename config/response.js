@@ -1,28 +1,40 @@
 module.exports = {
     commonError: {
         error: true,
-        message: 'Kesalahan pada server'
+        message: 'Kesalahan pada server',
+        status: "500"
     },
-    commonErrorMessage: (message) => {
+    commonErrorMessage: (message, status) => {
         return {
-            error: true, 
-            message: message
-        }
+        error: true,
+        message: message,
+        status: status
+        };
     },
     commonSucces: {
         error: false,
         message: 'Berhasil terhubung'
     },
-    commonSuccesMessage: (message) => {
+    commonSuccessMessage: (message, status) => {
         return {
             error: false, 
-            message: message
+            message: message,
+            status: status
         }
     },
-    commonResult: (data) => {
+    commonResult: (data, status) => {
         return {
             error: false,
             message: 'Berhasil memuat data',
+            data: data,
+            status: status
+        }
+    },
+    commonResultLogin: (data, status) => {
+        return {
+            error: false,
+            status: "200",
+            message: 'Login Success',
             data: data
         }
     }

@@ -1,15 +1,17 @@
 const userModel = require('../model/userModel');
+const biodataUserModel = require('../model/biodataUserModel');
 const response = require('../config/response');
 const bcrypt = require('bcrypt');
 const { reject, promise } = require('bcrypt/promises');
-
+const jwt = require('jsonwebtoken');
+const { SECRET_KEY } = require('../config/DbConfig');
 
 exports.registrasi = (data) => 
     new Promise((resolve, reject) => {
         userModel.findOne({username: data.username})
         .then(user =>{
             if (user) {
-                resolve(response.commonErrorMessage('Username sudah digunakan'))
+                resolve(response.commonErrorMessage('Username sudah digunakan', 400))
             } else {
                 bcrypt.hash(data.password, 10, (err, hash) => {                     //mengengkripsi password
                     if(err) {
@@ -17,8 +19,8 @@ exports.registrasi = (data) =>
                     } else {
                         data.password = hash
                         userModel.create(data)
-                            .then(() => resolve(response.commonSuccesMessage('Akun berhasil terdaftar')))
-                            .catch(() => reject(response.commonErrorMessage('Akun gagal terdaftar')))
+                            .then(() => resolve(response.commonSuccessMessage('Akun berhasil terdaftar', 200)))
+                            .catch(() => reject(response.commonErrorMessage('Akun gagal terdaftar', 400)))
                     }
                 })
             }
@@ -27,30 +29,52 @@ exports.registrasi = (data) =>
 
 exports.login = (data) => 
     new Promise((resolve, reject) => {
-        userModel.findOne({
-            username: data.username
-        }).then(user => {
-            if(user) {
-                if(bcrypt.compareSync(data.password, user.password)) {              //untuk mendekripsi password
-                    resolve(response.commonResult(user))
+        userModel.findOne({ username: data.username })
+            .then(user => {
+                if (user) {
+                    bcrypt.compare(data.password, user.password)
+                        .then((isMatch) => {
+                            if (isMatch) {
+                                const token = jwt.sign({ _id: user._id }, SECRET_KEY);
+                                resolve(response.commonResultLogin({ token, user }));
+                            } else {
+                                reject(response.commonErrorMessage('Password yang dimasukkan salah', 400));
+                            }
+                        })
+                        .catch(() => reject(response.commonErrorMessage('Terjadi kesalahan', 500)));
                 } else {
-                    reject(response.commonErrorMessage('Password yang dimasukan salah'))
-                } 
-            } else {
-                reject(response.commonErrorMessage('Username tidak ditemukan'))
+                    reject(response.commonErrorMessage('Username tidak ditemukan', 400));
+                }
+            })
+            .catch(() => reject(response.commonErrorMessage('Terjadi kesalahan', 500)));
+    });
+
+
+
+exports.Biodata = (data) =>
+    new Promise((resolve, reject) => {
+        biodataUserModel.findOne({ username: data.username, birthday: data.birthday, alamat: data.alamat })
+            .then(user => {
+                if (user) {
+                    resolve(response.commonErrorMessage('Data sudah ada', 400));
+                } else {
+                    biodataUserModel.create(data)
+                .then(() => resolve(response.commonSuccessMessage('Berhasil membuat biodata', 200)))
+                .catch(() => reject(response.commonErrorMessage('Gagal membuat biodata', 400)));
             }
         })
-    })
+        .catch(() => reject(response.commonErrorMessage('Terjadi kesalahan', 500)));
+    });
 
-// exports.createBiodata = (data) => 
-//     new Promise((resolve, reject) => {
-//         biodataModel.create(data)
-//         .then(() => resolve(response.commonSuccessMessage('Biodata berhasil dibuat')))
-//         .catch(() => reject(response.commonErrorMessage('Gagal membuat biodata')));
-//     });
+
     
-//     exports.getBiodata = () => new Promise((resolve, reject) => {
-//         biodataModel.find()
-//         .then((biodatas) => resolve(response.commonResult(biodatas)))
-//         .catch(() => reject(response.commonErrorMessage('Gagal mendapatkan biodata')));
+// exports.getBiodata = () =>
+//     new Promise((resolve, reject) => {
+//         biodataUserModel.findOne()
+//             .then((biodata) => resolve(response.commonResult(biodata)))
+//             .catch(() => reject(response.commonErrorMessage('Gagal mendapatkan biodata', 400)));
 //     });
+
+
+
+
