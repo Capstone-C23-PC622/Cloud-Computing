@@ -53,10 +53,11 @@ exports.login = (data) =>
 
 exports.Biodata = (data) =>
     new Promise((resolve, reject) => {
-        biodataUserModel.findOne({ username: data.username, birthday: data.birthday, alamat: data.alamat })
+        console.log(data);
+        biodataUserModel.findOne({ nama: data.nama, birthday: data.birthday, alamat: data.alamat })
             .then(user => {
                 if (user) {
-                    resolve(response.commonErrorMessage('Data sudah ada', 400));
+                    resolve(response.commonErrorMessage('Data sudah dibuat', 400));
                 } else {
                     biodataUserModel.create(data)
                 .then(() => resolve(response.commonSuccessMessage('Berhasil membuat biodata', 200)))

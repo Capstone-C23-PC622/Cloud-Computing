@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use('/user', routeUser);
 
 app.get("/", (req, res) => {
-    res.send('Response Success Sir!!');
+    res.send('Response Success!!');
 });
 
 const PORT = process.env.PORT || 5001;

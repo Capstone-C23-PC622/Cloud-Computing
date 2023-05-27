@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const biodataSchema = mongoose.Schema ({
     nama: {
-        type: String
+        type: String,
+        required: true
     },
     birthday: {
         day: {
@@ -17,16 +18,16 @@ const biodataSchema = mongoose.Schema ({
     },
     alamat: {
         type: String,
-        required: true,
+        required: true
     },
     deskripsiDiri: {
         type: String,
-        required: true, 
+        required: true
     },
     pendidikan: {
         type: String,
         enum: ['SD', 'SMP', 'SMA/SMK', 'S1/D4'],
-        required: true,
+        required: true
     },
     pengalaman: {
         type: String

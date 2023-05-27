@@ -2,7 +2,7 @@ module.exports = {
     commonError: {
         error: true,
         message: 'Kesalahan pada server',
-        status: "500"
+        status: 500
     },
     commonErrorMessage: (message, status) => {
         return {
@@ -33,7 +33,7 @@ module.exports = {
     commonResultLogin: (data, status) => {
         return {
             error: false,
-            status: "200",
+            status: 200,
             message: 'Login Success',
             data: data
         }
