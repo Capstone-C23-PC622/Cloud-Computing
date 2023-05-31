@@ -53,7 +53,6 @@ exports.login = (data) =>
 
 exports.Biodata = (data) =>
     new Promise((resolve, reject) => {
-        console.log(data);
         biodataUserModel.findOne({ nama: data.nama, birthday: data.birthday, alamat: data.alamat })
             .then(user => {
                 if (user) {
@@ -68,13 +67,22 @@ exports.Biodata = (data) =>
     });
 
 
-    
-// exports.getBiodata = () =>
-//     new Promise((resolve, reject) => {
-//         biodataUserModel.findOne()
-//             .then((biodata) => resolve(response.commonResult(biodata)))
-//             .catch(() => reject(response.commonErrorMessage('Gagal mendapatkan biodata', 400)));
-//     });
+
+exports.getBiodataById = (data) =>
+    new Promise((resolve, reject) => {
+        biodataUserModel.findOne({ data: data._id })
+            .then((data) => {
+                if (data) {
+                    resolve(response.commonResult(data));
+                } else {
+                    reject(response.commonErrorMessage('Biodata tidak ditemukan', 404));
+                }
+            })
+            .catch((error) => {
+                reject(response.commonErrorMessage('Gagal mendapatkan biodata', 500));
+            });
+    });
+
 
 
 
