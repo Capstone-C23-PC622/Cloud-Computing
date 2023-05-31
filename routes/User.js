@@ -21,4 +21,11 @@ router.post('/biodata', (req, res) => {
         .catch((err) => res.status(400).json(err));
 });
 
+router.get('/biodata/:id', (req, res) => {
+    const id = req.params.id;
+    userController.getBiodataById(id)
+        .then((result) => res.status(200).json(result))
+        .catch((err) => res.status(400).json(err));
+});
+
 module.exports = router;
