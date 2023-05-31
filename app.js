@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const routeUser = require('./routes/User');
+const routePengusaha = require('./routes/Loker');
 const mongoose = require('mongoose');
 const dbConfig = require('./config/DbConfig');
 const cors = require('cors');
@@ -18,6 +19,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 app.use('/user', routeUser);
+app.use('/pengusaha', routePengusaha);
 
 app.get("/", (req, res) => {
     res.send('Response Success!!');

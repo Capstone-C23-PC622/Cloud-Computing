@@ -71,7 +71,8 @@ exports.Biodata = (data) =>
     
 exports.getBiodataById = (data) =>
     new Promise((resolve, reject) => {
-        biodataUserModel.findOne({ data: data._id })
+        console.log(data)
+        biodataUserModel.findOne({ _id: data })
             .then((data) => {
                 if (data) {
                     resolve(response.commonResult(data));
