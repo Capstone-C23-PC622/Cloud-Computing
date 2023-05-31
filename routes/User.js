@@ -15,15 +15,9 @@ router.post('/login', (req, res) => {
     .catch((err) => res.status(400).json(err))
 })
 
+// biodata
 router.post('/biodata', (req, res) => {
     userController.Biodata(req.body)
-        .then((result) => res.status(200).json(result))
-        .catch((err) => res.status(400).json(err));
-});
-
-router.get('/biodata/:id', (req, res) => {
-    const id = req.params.id;
-    userController.getBiodataById(id)
         .then((result) => res.status(200).json(result))
         .catch((err) => res.status(400).json(err));
 });
