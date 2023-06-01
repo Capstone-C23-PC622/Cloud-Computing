@@ -1,7 +1,8 @@
 const lokerModel = require('../model/lokerModel');
 const response = require('../config/response');
+const imgUpload = require('../modules/imgUpload');
 
-exports.Loker = (data) =>
+exports.createLoker = (data, file) =>
     new Promise((resolve, reject) => {
         console.log(data);
         lokerModel.findOne({ namaPerusahaan: data.namaPerusahaan })
@@ -9,6 +10,10 @@ exports.Loker = (data) =>
                 if (loker) {
                     resolve(response.commonErrorMessage('Loker sudah tersedia', 400));
                 } else {
+                    if (file && file.cloudStoragePublicUrl) {
+                        data.image = file.cloudStoragePublicUrl;
+                    }
+
                     lokerModel.create(data)
                         .then(() => resolve(response.commonSuccessMessage('Berhasil membuat Loker', 200)))
                         .catch(() => reject(response.commonErrorMessage('Gagal membuat Loker', 400)));
@@ -19,7 +24,7 @@ exports.Loker = (data) =>
 
 exports.getLokerById = (data) =>
     new Promise((resolve, reject) => {
-        console.log(data)
+        console.log(data);
         lokerModel.findOne({ _id: data })
             .then((data) => {
                 if (data) {
