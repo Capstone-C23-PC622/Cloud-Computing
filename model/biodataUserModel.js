@@ -38,6 +38,6 @@ const biodataSchema = mongoose.Schema ({
     peminatan: {
         type: String
     }
-})
+}, { timestamps: true });
 
 module.exports = mongoose.model('biodatas', biodataSchema)

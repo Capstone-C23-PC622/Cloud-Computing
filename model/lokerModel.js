@@ -20,6 +20,10 @@ const lokerSchema = mongoose.Schema ({
     lokasi: {
         type: String
     },
-})
+    image: {
+        data: Buffer,
+        contentType: String
+    }
+}, { timestamps: true });
 
 module.exports = mongoose.model('loker', lokerSchema)
