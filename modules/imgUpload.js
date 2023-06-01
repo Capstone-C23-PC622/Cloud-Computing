@@ -1,9 +1,8 @@
 'use strict';
 const { Storage } = require('@google-cloud/storage');
-const fs = require('fs');
 const moment = require('moment');
 const path = require('path');
-const lokerModel = require('../model/lokerModel')
+
 
 const pathKey = path.resolve('./serviceaccountkey.json');
 
