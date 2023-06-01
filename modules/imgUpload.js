@@ -1,4 +1,3 @@
-'use strict';
 const { Storage } = require('@google-cloud/storage');
 const moment = require('moment');
 const path = require('path');

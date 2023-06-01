@@ -14,16 +14,14 @@ const multer = Multer({
 router.post('/loker', multer.single('image'), imgUpload.uploadToGcs, (req, res) => {
     const lokerData = req.body;
     if (req.file && req.file.cloudStoragePublicUrl) {
-        lokerData.image = {
-            data: req.file.cloudStorageObject,
-            contentType: req.file.cloudStorageError
-        };
+        lokerData.image = req.file.cloudStoragePublicUrl;
     }
 
-    lokerController.Loker(lokerData)
+    lokerController.createLoker(lokerData, req.file)
         .then((result) => res.status(200).json(result))
         .catch((err) => res.status(400).json(err));
 });
+
 
 // getLoker
 router.get('/loker/:id', (req, res) => {
