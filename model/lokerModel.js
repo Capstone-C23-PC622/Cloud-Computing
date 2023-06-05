@@ -19,10 +19,10 @@ const lokerSchema = mongoose.Schema({
         type: String,
     },
     lokasi: {
-    type: String,
+        type: String,
     },
     image: {
-        type: Buffer,
+        type: String, 
     },
 }, { timestamps: true });
 

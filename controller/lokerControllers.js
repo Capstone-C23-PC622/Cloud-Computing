@@ -4,36 +4,36 @@ const imgUpload = require('../modules/imgUpload');
 
 exports.createLoker = (data, file) =>
     new Promise((resolve, reject) => {
-        console.log(data);
-        lokerModel.findOne({ namaPerusahaan: data.namaPerusahaan })
-            .then(loker => {
-                if (loker) {
-                    resolve(response.commonErrorMessage('Loker sudah tersedia', 400));
-                } else {
-                    if (file && file.cloudStoragePublicUrl) {
-                        data.image = file.cloudStoragePublicUrl;
-                    }
+    console.log(data);
+    lokerModel.findOne({ namaPerusahaan: data.namaPerusahaan })
+        .then(loker => {
+        if (loker) {
+            resolve(response.commonErrorMessage('Loker sudah tersedia', 400));
+        } else {
+            if (file && file.cloudStoragePublicUrl) {
+            data.image = file.cloudStoragePublicUrl;
+            }
 
-                    lokerModel.create(data)
-                        .then(() => resolve(response.commonSuccessMessage('Berhasil membuat Loker', 200)))
-                        .catch(() => reject(response.commonErrorMessage('Gagal membuat Loker', 400)));
-                }
-            })
-            .catch(() => reject(response.commonErrorMessage('Terjadi kesalahan', 500)));
-    });
+            lokerModel.create(data)
+            .then(() => resolve(response.commonSuccessMessage('Berhasil membuat Loker', 200)))
+            .catch(() => reject(response.commonErrorMessage('Gagal membuat Loker', 400)));
+        }
+    })
+        .catch(() => reject(response.commonErrorMessage('Terjadi kesalahan', 500)));
+});
 
 exports.getLokerById = (data) =>
     new Promise((resolve, reject) => {
-        console.log(data);
-        lokerModel.findOne({ _id: data })
-            .then((data) => {
-                if (data) {
-                    resolve(response.commonResult(data, 200));
-                } else {
-                    reject(response.commonErrorMessage('Biodata tidak ditemukan', 404));
-                }
-            })
-            .catch((error) => {
-                reject(response.commonErrorMessage('Gagal mendapatkan biodata', 500));
-            });
+    console.log(data);
+    lokerModel.findOne({ _id: data })
+        .then((loker) => {
+        if (loker) {
+            resolve(response.commonResult(loker, 200));
+        } else {
+            reject(response.commonErrorMessage('Loker tidak ditemukan', 404));
+        }
+    })
+        .catch((error) => {
+        reject(response.commonErrorMessage('Gagal mendapatkan loker', 500));
     });
+});

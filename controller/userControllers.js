@@ -74,7 +74,7 @@ exports.getBiodataById = (data) =>
         biodataUserModel.findOne({ _id: data })
             .then((data) => {
                 if (data) {
-                    resolve(response.commonResult(data, 200));
+                    resolve(response.commonResultBiodata(data, 200));
                 } else {
                     reject(response.commonErrorMessage('Biodata tidak ditemukan', 404));
                 }

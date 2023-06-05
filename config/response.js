@@ -37,6 +37,15 @@ module.exports = {
             message: 'Login Success',
             data: data
         }
-    }
+    },
+    commonResultBiodata: (data, status) => {
+        return {
+            error: false,
+            message: 'Berhasil memuat data',
+            isEmpty: true, 
+            data: data,
+            status: status
+        }
+    },
 
 };
