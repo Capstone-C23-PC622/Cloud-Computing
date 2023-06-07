@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const { reject, promise } = require('bcrypt/promises');
 const jwt = require('jsonwebtoken');
 const { SECRET_KEY } = require('../config/DbConfig');
+const { resolve } = require('path');
 
 exports.registrasi = (data) => 
     new Promise((resolve, reject) => {
@@ -74,7 +75,7 @@ exports.getBiodataById = (data) =>
         biodataUserModel.findOne({ _id: data })
             .then((data) => {
                 if (data) {
-                    resolve(response.commonResultBiodata(data, 200));
+                    resolve(response.commonResult(data, 200));
                 } else {
                     reject(response.commonErrorMessage('Biodata tidak ditemukan', 404));
                 }
@@ -84,6 +85,24 @@ exports.getBiodataById = (data) =>
             });
     });
 
+exports.updateBiodataById = (_id, newData) =>
+    new Promise((resolve, reject) => {
+        biodataUserModel.findByIdAndUpdate(_id, newData, { new: true })
+            .then((updatedData) => {
+                if (updatedData) {
+                    resolve(response.commonUpdateBiodataResult('Biodata berhasil diubah', 200, updatedData));
+                } else {
+                    reject(response.commonErrorMessage('Biodata tidak ditemukan', 404));
+                }
+            })
+            .catch((error) => {
+                reject(response.commonErrorMessage('Gagal memperbarui biodata', 500));
+            });
+    });
 
-
-
+exports.deleteBiodataById = (_id) =>
+    new Promise((resolve, reject) => {
+        biodataUserModel.findByIdAndDelete(_id)
+        .then(() => resolve(response.commonSuccessMessage('Biodata berhasil dihapus', 200)))
+        .catch(() => reject(response.commonErrorMessage('Gagal menghapus biodata', 500)));
+    });

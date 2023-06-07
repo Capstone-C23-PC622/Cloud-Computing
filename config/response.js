@@ -8,6 +8,7 @@ module.exports = {
         return {
         error: true,
         message: message,
+        isEmpty: true,
         status: status
         };
     },
@@ -17,8 +18,9 @@ module.exports = {
     },
     commonSuccessMessage: (message, status) => {
         return {
-            error: false, 
+            error: false,
             message: message,
+            isEmpty: true,
             status: status
         }
     },
@@ -26,25 +28,27 @@ module.exports = {
         return {
             error: false,
             message: 'Berhasil memuat data',
+            isVerified: true,
             data: data,
             status: status
         }
     },
-    commonResultLogin: (data, status) => {
+    commonResultLogin: (data) => {
         return {
             error: false,
             status: 200,
+            isVerified: true,
             message: 'Login Success',
             data: data
         }
     },
-    commonResultBiodata: (data, status) => {
+    commonUpdateBiodataResult: (message, status, updateData) => {
         return {
             error: false,
-            message: 'Berhasil memuat data',
-            isEmpty: true, 
-            data: data,
-            status: status
+            message: message,
+            isVerified: true,
+            status: status,
+            updateData: updateData
         }
     },
 
