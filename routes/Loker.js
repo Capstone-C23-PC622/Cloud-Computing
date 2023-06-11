@@ -31,4 +31,11 @@ router.get('/loker/:id', (req, res) => {
         .catch((err) => res.status(400).json(err));
 });
 
+// Get All Loker
+router.get('/loker', (req, res) => {
+    lokerController.getAllLoker()
+        .then((result) => res.status(200).json(result))
+        .catch((err) => res.status(400).json(err));
+});
+
 module.exports = router;

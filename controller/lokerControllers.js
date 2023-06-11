@@ -22,6 +22,18 @@ exports.createLoker = (data, file) =>
         .catch(() => reject(response.commonErrorMessage('Terjadi kesalahan', 500)));
 });
 
+exports.getAllLoker = () =>
+    new Promise((resolve, reject) => {
+        lokerModel
+        .find()
+        .then((lokers) => {
+        resolve(response.commonResult(lokers, 200));
+        })
+        .catch((error) => {
+        reject(response.commonErrorMessage('Gagal mendapatkan loker', 500));
+        });
+});
+
 exports.getLokerById = (data) =>
     new Promise((resolve, reject) => {
     console.log(data);
