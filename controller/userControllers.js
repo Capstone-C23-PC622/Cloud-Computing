@@ -52,23 +52,33 @@ exports.login = (data) =>
 
 
 
-exports.Biodata = (data) =>
+exports.Biodata = (userId, data) =>
     new Promise((resolve, reject) => {
-        biodataUserModel.findOne({ nama: data.nama, birthday: data.birthday, alamat: data.alamat })
-            .then(user => {
-                if (user) {
+        userModel.findById(userId)
+        .then((user) => {
+            if (user) {
+            console.log(`Nama pemilik ID: ${user.username}`);
+            biodataUserModel.findOne({ user: userId })
+                .then((existingData) => {
+                if (existingData) {
                     resolve(response.commonErrorMessage('Data sudah dibuat', 400));
                 } else {
+                    data.user = userId;
                     biodataUserModel.create(data)
-                .then(() => resolve(response.commonSuccessMessage('Berhasil membuat biodata', 200)))
-                .catch(() => reject(response.commonErrorMessage('Gagal membuat biodata', 400)));
-            }
-        })
+                    .then(() => resolve(response.commonSuccessMessage('Berhasil membuat biodata', 200)))
+                    .catch(() => reject(response.commonErrorMessage('Gagal membuat biodata', 400)));
+                }
+            })
+                .catch(() => reject(response.commonErrorMessage('Terjadi kesalahan', 500)));
+            } else {
+                reject(response.commonErrorMessage('User tidak ditemukan', 404));
+        }
+    })
         .catch(() => reject(response.commonErrorMessage('Terjadi kesalahan', 500)));
-    });
+});
 
 
-    
+
 exports.getBiodataById = (data) =>
     new Promise((resolve, reject) => {
         console.log(data)

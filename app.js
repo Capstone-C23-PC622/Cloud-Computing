@@ -6,6 +6,7 @@ const routePengusaha = require('./routes/Loker');
 const mongoose = require('mongoose');
 const dbConfig = require('./config/DbConfig');
 const cors = require('cors');
+const predictionRoutes = require('./routes/prediction');
 
 mongoose.connect(dbConfig.mongoURL, {
     useNewUrlParser: true,
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 app.use('/user', routeUser);
 app.use('/pengusaha', routePengusaha);
+app.use('/prediction', predictionRoutes);
 
 app.get("/", (req, res) => {
     res.send('Response Success!!');

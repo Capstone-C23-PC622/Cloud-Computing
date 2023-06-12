@@ -17,7 +17,8 @@ router.post('/login', (req, res) => {
 
 // biodata
 router.post('/biodata', (req, res) => {
-    userController.Biodata(req.body)
+    const userId = req.body.userId; // Ganti dengan field yang sesuai dengan ID pengguna dari tabel users
+    userController.Biodata(userId, req.body.data)
         .then((result) => res.status(200).json(result))
         .catch((err) => res.status(400).json(err));
 });
