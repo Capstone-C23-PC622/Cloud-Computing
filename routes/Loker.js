@@ -23,7 +23,7 @@ router.post('/loker', multer.single('image'), imgUpload.uploadToGcs, (req, res) 
         .catch((err) => res.status(400).json(err));
 });  
 
-// getLoker
+// getLokerbyid
 router.get('/loker/:id', (req, res) => {
     const id = req.params.id;
     lokerController.getLokerById(id)

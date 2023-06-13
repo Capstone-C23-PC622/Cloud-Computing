@@ -1,10 +1,19 @@
 const mongoose = require('mongoose');
 
 const lokerSchema = mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     namaPerusahaan: {
         type: String,
         required: true,
         index: true,
+    },
+    lowongan: {
+        type: String,
+        required: true,
     },
     jenisLowongan: {
         type: String,
@@ -21,9 +30,12 @@ const lokerSchema = mongoose.Schema({
     lokasi: {
         type: String,
     },
+    deskripsi: {
+        type: String,
+    },
     image: {
         type: String, 
     },
 }, { timestamps: true });
 
-module.exports = mongoose.model('loker', lokerSchema);
+module.exports = mongoose.model('Loker', lokerSchema);
