@@ -13,15 +13,15 @@ const multer = Multer({
 // Loker Creation with Image Upload
 router.post('/loker', multer.single('image'), imgUpload.uploadToGcs, (req, res) => {
     const lokerData = req.body;
+    const userId = req.body.userId; // Mengambil userId dari body permintaan
     if (req.file && req.file.cloudStoragePublicUrl) {
         lokerData.image = req.file.cloudStoragePublicUrl;
     }
 
-    lokerController.createLoker(lokerData, req.file)
+    lokerController.createLoker(userId, lokerData, req.file)
         .then((result) => res.status(200).json(result))
         .catch((err) => res.status(400).json(err));
-});
-
+});  
 
 // getLoker
 router.get('/loker/:id', (req, res) => {

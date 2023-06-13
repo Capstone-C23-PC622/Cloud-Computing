@@ -57,8 +57,9 @@ exports.Biodata = (userId, data) =>
         userModel.findById(userId)
         .then((user) => {
             if (user) {
+            console.log(`ID Pemilik: ${userId}`);
             console.log(`Nama pemilik ID: ${user.username}`);
-            biodataUserModel.findOne({ user: userId })
+            biodataUserModel.findOne({ nama: data.nama, birthday: data.birthday })
                 .then((existingData) => {
                 if (existingData) {
                     resolve(response.commonErrorMessage('Data sudah dibuat', 400));
