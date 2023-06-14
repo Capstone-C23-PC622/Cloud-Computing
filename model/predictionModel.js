@@ -1,12 +1,19 @@
 const axios = require('axios');
 
-const predict = async (data) => {
+exports.predict = async (longitude, latitude) => {
     try {
-        const response = await axios.post('https://machinelearning-dot-backend-388012.et.r.appspot.com/predict', data);
-    return response.data;
+    const predictResponse = await axios.post(process.env.URL_MACHINELEARNING, {
+        longitude: longitude,
+        latitude: latitude,
+    }, 
+    {
+        headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        },
+    });
+    const predictData = predictResponse.data.data;
+    return predictData;
     } catch (error) {
     throw new Error('Failed to make prediction');
     }
 };
-
-module.exports = {predict};

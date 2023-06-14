@@ -3,6 +3,7 @@ const response = require('../config/response');
 const imgUpload = require('../modules/imgUpload');
 const userModel = require('../model/userModel');
 const biodataModel = require('../model/biodataUserModel');
+const profilUsahaModel = require('../model/profilUsahaModel');
 
 exports.createLoker = (userId, data, file) =>
     new Promise((resolve, reject) => {
@@ -62,23 +63,71 @@ exports.getLokerById = (data) =>
 });
 
 
-exports.getMatchingLokers = async (req, res) => {
-    const userId = req.params.userId;
-    try {
-      // Mendapatkan data biodata pengguna berdasarkan userId
-        const biodata = await biodataModel.findOne({ userId });
-        if (!biodata) {
-        return res.status(404).json({ error: 'Biodata tidak ditemukan' });
-        }
-      // Mengambil loker yang sesuai berdasarkan data biodata
-        const matchingLokers = await lokerModel.find({
-            jenisLowongan: biodata.peminatan,
-            pendidikan: biodata.pendidikan,
-            pengalaman: { $gte: biodata.pengalaman }
-        });
+exports.createProfile = (userId, data, file) =>
+    new Promise((resolve, reject) => {
+        userModel
+        .findById(userId)
+        .then((user) => {
+        if (user) {
+            console.log(`ID Pemilik: ${userId}`);
+            console.log(`Nama pemilik ID: ${user.username}`);
+            profilUsahaModel
+            .findOne({ namaUsaha: data.namaUsaha })
+            .then((profile) => {
+                if (profile) {
+                resolve(response.commonErrorMessage('Profil Usaha sudah dibuat', 400));
+                } else {
+                if (file && file.cloudStoragePublicUrl) {
+                    data.image = file.cloudStoragePublicUrl;
+                }
+                data.user = userId;
+                profilUsahaModel.create(data)
+                .then(() =>
+                    resolve(response.commonSuccessMessage('Berhasil membuat Profil Usaha', 200))
+                )
+                .catch(() =>
+                    reject(response.commonErrorMessage('Gagal membuat Profil Usaha', 400))
+                );
+                } 
+            })
+            .catch(() => reject(response.commonErrorMessage('Terjadi kesalahan', 500)));
+        } else {
+            reject(response.commonErrorMessage('User tidak ditemukan', 404));
+            }
+    })
+        .catch(() => reject(response.commonErrorMessage('Terjadi kesalahan', 500)));
+});
 
-        res.status(200).json({ lokers: matchingLokers });
-    } catch (error) {
-        res.status(500).json({ error: 'Terjadi kesalahan saat mengambil loker' });
-    }
-};
+// get profile usaha by id
+exports.getProfileById = (data) =>
+    new Promise((resolve, reject) => {
+        console.log(data);
+        profilUsahaModel.findOne({ _id: data })
+        .then((profile) => {
+            if (profile) {
+                resolve(response.commonResult(profile, 200));
+            } else {
+                reject(response.commonErrorMessage('Profil Usaha tidak ditemukan', 404));
+            }
+        })
+        .catch((error) => {
+        reject(response.commonErrorMessage('Gagal mendapatkan Profil Usaha', 500));
+    });
+});
+
+
+// update profile by id
+exports.updateProfileById = (_id, newData) =>
+    new Promise((resolve, reject) => {
+        profilUsahaModel.findByIdAndUpdate(_id, newData, { new: true })
+            .then((updatedData) => {
+                if (updatedData) {
+                    resolve(response.commonUpdateBiodataResult('Profil Usaha berhasil diubah', 200, updatedData));
+                } else {
+                    reject(response.commonErrorMessage('Profil Usaha tidak ditemukan', 404));
+                }
+            })
+            .catch((error) => {
+                reject(response.commonErrorMessage('Gagal memperbarui Profil Usaha', 500));
+            });
+    });
