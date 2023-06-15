@@ -38,6 +38,16 @@ router.get('/loker', (req, res) => {
         .catch((err) => res.status(400).json(err));
 });
 
+// Delete loker by ID
+router.delete('/loker/:id', (req, res) => {
+    const id = req.params.id;
+
+    lokerController.deleteLokerById(id)
+        .then((result) => res.status(200).json(result))
+        .catch((err) => res.status(400).json(err));
+});
+
+
 // Profile Creation with Image Upload
 router.post('/profile', multer.single('image'), imgUpload.uploadToGcs, (req, res) => {
     const lokerData = req.body;
@@ -60,16 +70,6 @@ router.get('/profile/:id', (req, res) => {
 });
 
 
-// Delete loker by ID
-router.delete('/loker/:id', (req, res) => {
-    const id = req.params.id;
-
-    lokerController.deleteLokerById(id)
-        .then((result) => res.status(200).json(result))
-        .catch((err) => res.status(400).json(err));
-});
-
-
 // update profile by id
 router.put('/profile/:id', (req, res) => {
     const id = req.params.id;
@@ -81,6 +81,13 @@ router.put('/profile/:id', (req, res) => {
 });
 
 
+// delete profile by id
+router.delete('/profile/:id', (req, res) => {
+    const id = req.params.id;
 
+    lokerController.deleteProfileById(id)
+        .then((result) => res.status(200).json(result))
+        .catch((err) => res.status(400).json(err));
+});
 
 module.exports = router;

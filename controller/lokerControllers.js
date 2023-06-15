@@ -142,6 +142,13 @@ exports.updateProfileById = (_id, newData) =>
             });
     });
 
+// delete profile by id
+exports.deleteProfileById = (_id) =>
+    new Promise((resolve, reject) => {
+        profilUsahaModel.findByIdAndDelete(_id)
+        .then(() => resolve(response.commonSuccessMessage('Profile berhasil dihapus', 200)))
+        .catch(() => reject(response.commonErrorMessage('Gagal menghapus Profile', 500)));
+    });
 
 
 exports.getRecommendedLokers = async (req, res) => {
