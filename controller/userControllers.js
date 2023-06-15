@@ -64,7 +64,7 @@ exports.Biodata = (userId, data) =>
                 if (existingData) {
                     resolve(response.commonErrorMessage('Data sudah dibuat', 400));
                 } else {
-                    data.user = userId;
+                    data.userId = userId;
                     biodataUserModel.create(data)
                     .then(() => resolve(response.commonSuccessMessage('Berhasil membuat biodata', 200)))
                     .catch(() => reject(response.commonErrorMessage('Gagal membuat biodata', 400)));
@@ -80,21 +80,21 @@ exports.Biodata = (userId, data) =>
 
 
 
-exports.getBiodataById = (data) =>
+exports.getBiodataByUserId = (userId) =>
     new Promise((resolve, reject) => {
-        console.log(data)
-        biodataUserModel.findOne({ _id: data })
-            .then((data) => {
-                if (data) {
-                    resolve(response.commonResult(data, 200));
-                } else {
-                    reject(response.commonErrorMessage('Biodata tidak ditemukan', 404));
-                }
-            })
+    console.log(userId);
+    biodataUserModel.findOne({ userId: userId })
+        .then((biodata) => {
+        if (biodata) {
+            resolve(response.commonResult(biodata, 200));
+        } else {
+            reject(response.commonErrorMessage('Biodata tidak ditemukan', 404));
+        }
+        })
             .catch((error) => {
-                reject(response.commonErrorMessage('Gagal mendapatkan biodata', 500));
-            });
-    });
+            reject(response.commonErrorMessage('Gagal mendapatkan biodata', 500));
+        });
+});
 
 exports.updateBiodataById = (_id, newData) =>
     new Promise((resolve, reject) => {
