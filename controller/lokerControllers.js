@@ -108,21 +108,22 @@ exports.createProfile = (userId, data, file) =>
 });
 
 // get profile usaha by id
-exports.getProfileById = (data) =>
+exports.getProfileById = (userId) =>
     new Promise((resolve, reject) => {
-        console.log(data);
-        profilUsahaModel.findOne({ _id: data })
-        .then((profile) => {
-            if (profile) {
-                resolve(response.commonResult(profile, 200));
-            } else {
-                reject(response.commonErrorMessage('Profil Usaha tidak ditemukan', 404));
-            }
-        })
-        .catch((error) => {
-        reject(response.commonErrorMessage('Gagal mendapatkan Profil Usaha', 500));
+        console.log(userId);
+        profilUsahaModel.findOne({ userId: userId })
+            .then((profile) => {
+                if (profile) {
+                    resolve(response.commonResult(profile, 200));
+                } else {
+                    reject(response.commonErrorMessage('Profil Usaha tidak ditemukan', 404));
+                }
+            })
+            .catch((error) => {
+                reject(response.commonErrorMessage('Gagal mendapatkan Profil Usaha', 500));
+            });
     });
-});
+
 
 
 // update profile by id

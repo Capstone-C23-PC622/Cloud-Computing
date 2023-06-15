@@ -57,7 +57,9 @@ router.get('/profile/:id', (req, res) => {
     lokerController.getProfileById(id)
         .then((result) => res.status(200).json(result))
         .catch((err) => res.status(400).json(err));
-}); 
+});
+
+
 // Delete loker by ID
 router.delete('/loker/:id', (req, res) => {
     const id = req.params.id;
