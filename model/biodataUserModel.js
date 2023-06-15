@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const biodataSchema = mongoose.Schema({
+const biodataSchema = mongoose.Schema ({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -45,4 +45,4 @@ const biodataSchema = mongoose.Schema({
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model('biodatas', biodataSchema);
+module.exports = mongoose.model('biodatas', biodataSchema)
