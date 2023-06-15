@@ -58,6 +58,15 @@ router.get('/profile/:id', (req, res) => {
         .then((result) => res.status(200).json(result))
         .catch((err) => res.status(400).json(err));
 }); 
+// Delete loker by ID
+router.delete('/loker/:id', (req, res) => {
+    const id = req.params.id;
+
+    lokerController.deleteLokerById(id)
+        .then((result) => res.status(200).json(result))
+        .catch((err) => res.status(400).json(err));
+});
+
 
 // update profile by id
 router.put('/profile/:id', (req, res) => {
@@ -68,6 +77,8 @@ router.put('/profile/:id', (req, res) => {
         .then((result) => res.status(200).json(result))
         .catch((err) => res.status(400).json(err));
 });
+
+
 
 
 module.exports = router;

@@ -1,8 +1,9 @@
+const axios = require('axios');
 const lokerModel = require('../model/lokerModel');
 const response = require('../config/response');
 const imgUpload = require('../modules/imgUpload');
 const userModel = require('../model/userModel');
-const biodataModel = require('../model/biodataUserModel');
+const biodataUserModel = require('../model/biodataUserModel');
 const profilUsahaModel = require('../model/profilUsahaModel');
 
 exports.createLoker = (userId, data, file) =>
@@ -61,6 +62,14 @@ exports.getLokerById = (data) =>
         reject(response.commonErrorMessage('Gagal mendapatkan loker', 500));
     });
 });
+
+// delete loker by id
+exports.deleteLokerById = (_id) =>
+    new Promise((resolve, reject) => {
+        lokerModel.findByIdAndDelete(_id)
+        .then(() => resolve(response.commonSuccessMessage('Loker berhasil dihapus', 200)))
+        .catch(() => reject(response.commonErrorMessage('Gagal menghapus Loker', 500)));
+    });
 
 
 exports.createProfile = (userId, data, file) =>
@@ -131,3 +140,71 @@ exports.updateProfileById = (_id, newData) =>
                 reject(response.commonErrorMessage('Gagal memperbarui Profil Usaha', 500));
             });
     });
+
+
+
+exports.getRecommendedLokers = async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).send({
+                code: '404',
+                status: 'Not Found',
+                errors: {
+                    message: 'User not found',
+                },
+            });
+        }
+
+        console.log(`ID Pemilik: ${userId}`);
+        console.log(`Nama pemilik ID: ${user.username}`);
+
+        const biodata = await biodataUserModel.findOne({
+            keterampilan: req.body.data.keterampilan,
+            peminatan: req.body.data.peminatan,
+        });
+
+        if (!biodata) {
+            return res.status(404).send({
+                code: '404',
+                status: 'Not Found',
+                errors: {
+                    message: 'Biodata not found',
+                },
+            });
+        }
+
+        try {
+            const predictResponse = await axios.post(process.env.URL_MACHINELEARNING, {
+                keterampilan: req.body.data.keterampilan,
+                peminatan: req.body.data.peminatan,
+            });
+
+            const predictData = predictResponse.data.data;
+            return res.status(200).send({
+                code: '200',
+                status: 'OK',
+                data: predictData,
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).send({
+                code: '500',
+                status: 'Internal Server Error',
+                errors: {
+                    message: 'An error occurred while fetching predicted loker',
+                },
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({
+            code: '500',
+            status: 'Internal Server Error',
+            errors: {
+                message: 'An error occurred',
+            },
+        });
+    }
+};
